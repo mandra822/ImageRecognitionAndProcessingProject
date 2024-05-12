@@ -39,6 +39,30 @@ def frameCapture(path, scale = 0.5):
     vidObj.release()
     cv2.destroyAllWindows()
 
+def frameCapture_with_yolo(path, scale = 0.5):
+
+    vidObj = cv2.VideoCapture(path)
+
+    while vidObj.isOpened():
+        success, image = vidObj.read()
+
+        if not success:
+            print("Error opening video file")
+            break
+
+        resized_image = cv2.resize(image, None, fx=scale, fy=scale)
+
+        results = detection.detect_with_yolo(resized_image)
+
+        cv2.imshow('Project RiPo', results.render()[0])
+
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
+    
+    vidObj.release()
+    cv2.destroyAllWindows()
+    
+
 
 
 

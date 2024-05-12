@@ -1,7 +1,9 @@
 import cv2
+import torch
 
 car_cascade = cv2.CascadeClassifier('./models/cars.xml')
 pedestrian_cascade = cv2.CascadeClassifier('./models/haarcascade_fullbody.xml')
+model = torch.hub.load('ultralytics/yolov5', 'yolov5s', pretrained=True)
 
 def detect_objects(image):
 
@@ -18,3 +20,8 @@ def detect_objects(image):
         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
     
     return image
+
+def detect_with_yolo(image):
+
+    results = model(image)
+    return results
