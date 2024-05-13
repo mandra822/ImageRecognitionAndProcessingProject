@@ -40,7 +40,7 @@ def frameCapture(path, scale = 0.5):
     cv2.destroyAllWindows()
 
 
-def frameCapture_with_yolo(path, scale=0.5):
+def frameCapture_with_yolo(path, scale=0.5, confidence=0.5):
     vidObj = cv2.VideoCapture(path)
 
     while vidObj.isOpened():
@@ -52,7 +52,7 @@ def frameCapture_with_yolo(path, scale=0.5):
 
         resized_image = cv2.resize(image, None, fx=scale, fy=scale)
 
-        image_with_detection = detection.detect_with_yolo(resized_image)
+        image_with_detection = detection.detect_with_yolo(resized_image, confidence)
 
         cv2.imshow('Project RiPo', image_with_detection)
 

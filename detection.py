@@ -22,7 +22,7 @@ def detect_objects(image):
     return image
 
 
-def detect_with_yolo(image):
+def detect_with_yolo(image, confidence_threshold):
     results = model(image)
     cars = []
     pedestrians = []
@@ -30,18 +30,16 @@ def detect_with_yolo(image):
 
     for detection in results.xyxy[0]:
         label = int(detection[-1])
-        if label == 2:  # Label for cars
-            x_min, y_min, x_max, y_max = map(int, detection[:4])
-            conf = float(detection[4])
-            cars.append(((x_min, y_min), (x_max, y_max), conf))
-        elif label == 0:  # Label for pedestrians
-            x_min, y_min, x_max, y_max = map(int, detection[:4])
-            conf = float(detection[4])
-            pedestrians.append(((x_min, y_min), (x_max, y_max), conf))
-        elif label == 7:  # Label for traffic lights
-            x_min, y_min, x_max, y_max = map(int, detection[:4])
-            conf = float(detection[4])
-            trucks.append(((x_min, y_min), (x_max, y_max), conf))
+        x_min, y_min, x_max, y_max = map(int, detection[:4])
+        conf = float(detection[4])
+
+        if conf >= confidence_threshold:
+            if label == 2: #label for cars
+                cars.append(((x_min, y_min), (x_max, y_max), conf))
+            elif label == 0: #label for pedestrians
+                pedestrians.append(((x_min, y_min), (x_max, y_max), conf))
+            elif label == 7: #label for trucks
+                trucks.append(((x_min, y_min), (x_max, y_max), conf))
 
     for car in cars:
         cv2.rectangle(image, car[0], car[1], (0, 0, 255), 2)
