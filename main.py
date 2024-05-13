@@ -4,7 +4,7 @@ import video_handler
 
 if __name__ == '__main__':
     # video_handler.frameCapture('./assets/2024-02-08_08-35-59-front.mp4')
-    video_handler.frameCapture_with_yolo('./assets/2024-02-08_08-35-59-front.mp4')
+    video_handler.frameCapture_with_yolo('./assets/nagranie5.mp4')
 
     # image = cv2.imread('./assets/test.jpeg')
     # line_drawer.draw_lines(image, 100, 110, 150, 700, (0, 0, 255))
