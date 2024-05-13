@@ -39,8 +39,8 @@ def frameCapture(path, scale = 0.5):
     vidObj.release()
     cv2.destroyAllWindows()
 
-def frameCapture_with_yolo(path, scale = 0.5):
 
+def frameCapture_with_yolo(path, scale=0.5):
     vidObj = cv2.VideoCapture(path)
 
     while vidObj.isOpened():
@@ -52,17 +52,12 @@ def frameCapture_with_yolo(path, scale = 0.5):
 
         resized_image = cv2.resize(image, None, fx=scale, fy=scale)
 
-        results = detection.detect_with_yolo(resized_image)
+        image_with_detection = detection.detect_with_yolo(resized_image)
 
-        cv2.imshow('Project RiPo', results.render()[0])
+        cv2.imshow('Project RiPo', image_with_detection)
 
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
-    
+
     vidObj.release()
     cv2.destroyAllWindows()
-    
-
-
-
-
