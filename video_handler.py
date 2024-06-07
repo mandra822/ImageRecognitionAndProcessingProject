@@ -1,5 +1,7 @@
 import cv2
 import detection
+from line_drawer import draw_parking_line
+from settings_file import *
 
 
 # Function to extract frames
@@ -28,6 +30,8 @@ def frameCapture(path, scale = 0.5):
 
         image_with_detection = detection.detect_objects(resized_image)
 
+
+
         # Displays the frame in a window named "Frame"
         cv2.imshow("Project RiPO", image_with_detection)
 
@@ -53,6 +57,10 @@ def frameCapture_with_yolo(path, scale=0.5):
         resized_image = cv2.resize(image, None, fx=scale, fy=scale)
 
         image_with_detection = detection.detect_with_yolo(resized_image)
+
+        shape = image_with_detection.shape
+        draw_parking_line(image_with_detection, (shape[0]/3, 0), line_angle, 300, 2, (255, 0, 0))
+        draw_parking_line(image_with_detection, (shape[0], 0), line_angle, 300, 2, (255, 0, 0))
 
         cv2.imshow('Project RiPo', image_with_detection)
 

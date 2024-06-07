@@ -33,23 +33,25 @@ def detect_with_yolo(image):
         if label == 2:  # Label for cars
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            cars.append(((x_min, y_min), (x_max, y_max), conf))
+            cars.append(((x_min, y_min), (x_max, y_max), conf, "car", (0, 0, 255)))
         elif label == 0:  # Label for pedestrians
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            pedestrians.append(((x_min, y_min), (x_max, y_max), conf))
-        elif label == 7:  # Label for traffic lights
+            pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", (0, 255, 0)))
+        elif label == 7:  # Label for trucks
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            trucks.append(((x_min, y_min), (x_max, y_max), conf))
+            trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", (255, 0, 0)))
 
-    for car in cars:
-        cv2.rectangle(image, car[0], car[1], (0, 0, 255), 2)
+    objects_to_detect = cars + pedestrians + trucks
 
-    for pedestrian in pedestrians:
-        cv2.rectangle(image, pedestrian[0], pedestrian[1], (255, 0, 0), 2)
-
-    for truck in trucks:
-        cv2.rectangle(image, truck[0], truck[1], (0, 255, 0), 2)
+    for obj in objects_to_detect:
+        (x_min, y_min), (x_max, y_max), conf, name,  color = obj
+        mark_object(image, (x_min, y_min), (x_max, y_max), conf, name, color)
 
     return image
+
+
+def mark_object(image, top_left, bottom_right, conf, name, color):
+    cv2.rectangle(image, top_left, bottom_right, color, 2)
+    cv2.putText(image, f"{name} {round(conf,2)}", (top_left[0], top_left[1]-3), cv2.FONT_HERSHEY_PLAIN, 1, color, 1, cv2.LINE_AA)
