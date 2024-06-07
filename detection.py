@@ -44,7 +44,7 @@ def detect_with_yolo(image, confidence_threshold):
             trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", (255, 0, 0)))
 
     objects_to_detect = cars + pedestrians + trucks
-    objects_to_detect = [x for x in objects_to_detect if objects_to_detect[2] >= confidence_threshold]
+    objects_to_detect = [x for x in objects_to_detect if x[2] >= confidence_threshold]
 
     for obj in objects_to_detect:
         (x_min, y_min), (x_max, y_max), conf, name,  color = obj
