@@ -1,1 +1,1 @@
-line_angle = 60
+line_angle = -30

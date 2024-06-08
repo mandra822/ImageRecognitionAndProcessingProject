@@ -1,6 +1,6 @@
 import cv2
 import detection
-from line_drawer import draw_parking_line
+from line_drawer import draw_parking_line, check_if_intersect, get_line_end_point
 from settings_file import *
 
 
@@ -56,11 +56,31 @@ def frameCapture_with_yolo(path, scale=0.5, confidence=0.5):
 
         resized_image = cv2.resize(image, None, fx=scale, fy=scale)
 
-        image_with_detection = detection.detect_with_yolo(resized_image, confidence)
+        image_with_detection, detected_objects = detection.detect_with_yolo(resized_image, confidence)
 
         shape = image_with_detection.shape
-        draw_parking_line(image_with_detection, (shape[0]/3, 0), line_angle, 300, 2, (255, 0, 0))
-        draw_parking_line(image_with_detection, (shape[0], 0), line_angle, 300, 2, (255, 0, 0))
+        line1_pivot = (shape[0]/3, 0)
+        line2_pivot = (shape[0], 0)
+        line_length = 300
+        line_color = (255, 255, 0)
+
+        line1_end = get_line_end_point(line1_pivot, line_angle, line_length)
+        line2_end = get_line_end_point(line2_pivot, line_angle, line_length)
+
+        is_intersection = False
+        for obj in detected_objects:
+            (x_min, y_min), (x_max, y_max), conf, name, color = obj
+            is_intersection = check_if_intersect(line1_pivot, line1_end, (x_min, y_min), (x_max, y_max))
+            if is_intersection:
+                break
+            is_intersection = check_if_intersect(line2_pivot, line2_end, (x_min, y_min), (x_max, y_max))
+            if is_intersection:
+                break
+
+        if is_intersection:
+            line_color = (255, 0, 0)
+        draw_parking_line(image_with_detection, line1_pivot, line_angle, line_length, 2, line_color)
+        draw_parking_line(image_with_detection, line2_pivot, line_angle, line_length, 2, line_color)
 
         cv2.imshow('Project RiPo', image_with_detection)
 

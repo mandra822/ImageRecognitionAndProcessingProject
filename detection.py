@@ -50,7 +50,7 @@ def detect_with_yolo(image, confidence_threshold):
         (x_min, y_min), (x_max, y_max), conf, name,  color = obj
         mark_object(image, (x_min, y_min), (x_max, y_max), conf, name, color)
 
-    return image
+    return image, objects_to_detect
 
 
 def mark_object(image, top_left, bottom_right, conf, name, color):
