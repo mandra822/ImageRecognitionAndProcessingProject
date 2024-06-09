@@ -4,7 +4,9 @@ from line_drawer import draw_parking_line, check_if_intersect, get_line_end_poin
 import tkinter as tk
 from PIL import Image, ImageTk
 import configurator as config
-from settings_file import *
+import default_settings
+
+line_angle = default_settings.line_angle
 
 def show_frame(video, label, scale, confidence):
     success, image = video.read()
@@ -19,7 +21,7 @@ def show_frame(video, label, scale, confidence):
         shape = image_with_detection.shape
         line1_pivot = (int(shape[0] / 3), 0)
         line2_pivot = (int(shape[0]), 0)
-        line_length = 300
+        line_length = 250
         line_color = config.lines_color
 
         line1_end = get_line_end_point(line1_pivot, line_angle, line_length)
@@ -36,7 +38,7 @@ def show_frame(video, label, scale, confidence):
                 break
 
         if is_intersection:
-            line_color = (255, 0, 0)
+            line_color = config.lines_color_alert
         draw_parking_line(image_with_detection, line1_pivot, line_angle, line_length, 2, line_color)
         draw_parking_line(image_with_detection, line2_pivot, line_angle, line_length, 2, line_color)
 
@@ -57,10 +59,19 @@ def frameCapture_with_yolo(path, scale=0.5, confidence=0.5):
     main_window.title("Project RiPO")
 
     main_label = tk.Label(main_window)
-    main_label.pack()
+    main_label.pack(pady=5)
+
+    angle_scale = tk.Scale(main_window, from_=-90, to=90, length=270 ,orient=tk.HORIZONTAL)
+    angle_scale.pack()
+
+    def on_scale_change(value):
+        global line_angle
+        line_angle = value
+
+    angle_scale.bind("<Motion>", lambda event: on_scale_change(angle_scale.get()))
 
     config_button = tk.Button(main_window, text="Open Configurator", command=lambda: config.open_config_window(main_window))
-    config_button.pack()
+    config_button.pack(pady=10)
 
     show_frame(vidObj, main_label, scale, confidence)
     main_window.mainloop()

@@ -34,15 +34,15 @@ def detect_with_yolo(image, confidence_threshold):
         if label == 2 and config.detect_cars:  # Label for cars
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            cars.append(((x_min, y_min), (x_max, y_max), conf, "car", (0, 0, 255)))
+            cars.append(((x_min, y_min), (x_max, y_max), conf, "car", config.cars_color))
         elif label == 0 and config.detect_pedestrians:  # Label for pedestrians
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", (0, 255, 0)))
+            pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", config.pedestrians_color))
         elif label == 7 and config.detect_trucks:  # Label for trucks
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", (255, 0, 0)))
+            trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", config.trucks_color))
 
     objects_to_detect = cars + pedestrians + trucks
     objects_to_detect = [x for x in objects_to_detect if x[2] >= confidence_threshold]

@@ -19,13 +19,13 @@ def open_path_chooser():
     path_chooser_window.title("Choose video path")
 
     path_label = tk.Label(path_chooser_window, text="Selected Video Path:")
-    path_label.pack()
+    path_label.pack(pady=5)
 
     path_entry = tk.Entry(path_chooser_window, width=50)
-    path_entry.pack()
+    path_entry.pack(pady=5)
 
     choose_file_button = tk.Button(path_chooser_window, text="Choose Video File", command=lambda: choose_file(path_entry))
-    choose_file_button.pack()
+    choose_file_button.pack(pady=5)
 
     confirm_button = tk.Button(path_chooser_window, text="Confirm", command=lambda: confirm_and_start(path_chooser_window, path_entry))
     confirm_button.pack()
