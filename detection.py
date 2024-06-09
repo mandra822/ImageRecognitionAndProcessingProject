@@ -1,5 +1,6 @@
 import cv2
 import torch
+import configurator as config
 
 car_cascade = cv2.CascadeClassifier('./models/cars.xml')
 pedestrian_cascade = cv2.CascadeClassifier('./models/haarcascade_fullbody.xml')
@@ -30,15 +31,15 @@ def detect_with_yolo(image, confidence_threshold):
 
     for detection in results.xyxy[0]:
         label = int(detection[-1])
-        if label == 2:  # Label for cars
+        if label == 2 and config.detect_cars:  # Label for cars
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
             cars.append(((x_min, y_min), (x_max, y_max), conf, "car", (0, 0, 255)))
-        elif label == 0:  # Label for pedestrians
+        elif label == 0 and config.detect_pedestrians:  # Label for pedestrians
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
             pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", (0, 255, 0)))
-        elif label == 7:  # Label for trucks
+        elif label == 7 and config.detect_trucks:  # Label for trucks
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
             trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", (255, 0, 0)))
