@@ -21,7 +21,7 @@ def show_frame(video, label, scale, confidence):
         shape = image_with_detection.shape
         line1_pivot = (int(shape[0] / 3), 0)
         line2_pivot = (int(shape[0]), 0)
-        line_length = 250
+        line_length = 225
         line_color = config.lines_color
 
         line1_end = get_line_end_point(line1_pivot, line_angle, line_length)

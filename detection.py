@@ -29,20 +29,28 @@ def detect_with_yolo(image, confidence_threshold):
     pedestrians = []
     trucks = []
 
+    cars_color = config.cars_color
+    pedestrians_color = config.pedestrians_color
+    trucks_color = config.trucks_color
+
+    cars_color_bgr = (cars_color[2], cars_color[1], cars_color[0])
+    pedestrians_color_bgr = (pedestrians_color[2], pedestrians_color[1], pedestrians_color[0])
+    trucks_color_bgr = (trucks_color[2], trucks_color[1], trucks_color[0])
+
     for detection in results.xyxy[0]:
         label = int(detection[-1])
         if label == 2 and config.detect_cars:  # Label for cars
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            cars.append(((x_min, y_min), (x_max, y_max), conf, "car", config.cars_color))
+            cars.append(((x_min, y_min), (x_max, y_max), conf, "car", cars_color_bgr))
         elif label == 0 and config.detect_pedestrians:  # Label for pedestrians
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", config.pedestrians_color))
+            pedestrians.append(((x_min, y_min), (x_max, y_max), conf, "person", pedestrians_color_bgr))
         elif label == 7 and config.detect_trucks:  # Label for trucks
             x_min, y_min, x_max, y_max = map(int, detection[:4])
             conf = float(detection[4])
-            trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", config.trucks_color))
+            trucks.append(((x_min, y_min), (x_max, y_max), conf, "truck", trucks_color_bgr))
 
     objects_to_detect = cars + pedestrians + trucks
     objects_to_detect = [x for x in objects_to_detect if x[2] >= confidence_threshold]
